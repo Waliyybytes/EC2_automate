@@ -20,29 +20,47 @@ jobs:
   #         name: Create Cloudformation Stack
   #         command: aws cloudformation deploy --template-file template.yml --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} --region us-east-1
 
-    configure_infrastructure:    
-      docker:
-        - image: python:3.7-alpine3.11
-      steps:
-        - checkout
-        - add_ssh_keys:
-            fingerprints: [53:ac:a9:3c:94:d9:54:5e:a4:13:9c:05:d6:6b:75:5e]
-        - run: 
-            name: install dependencies
-            command: |
-              apk add --update ansible
-        - run: 
-            name: configure server
-            command: |
-              ansible-playbook -i inventory.txt main.yml
+    # configure_infrastructure:    
+    #   docker:
+    #     - image: python:3.7-alpine3.11
+    #   steps:
+    #     - checkout
+    #     - add_ssh_keys:
+    #         fingerprints: [53:ac:a9:3c:94:d9:54:5e:a4:13:9c:05:d6:6b:75:5e]
+    #     - run: 
+    #         name: install dependencies
+    #         command: |
+    #           apk add --update ansible
+    #     - run: 
+    #         name: configure server
+    #         command: |
+    #           ansible-playbook -i inventory.txt main.yml
 
+    # Exercise: Smoke Testing
+      smoke_test:
+        docker:
+          - image: alpine:latest
+        steps:
+          - run: apk add --update curl
+          - run:
+              name: smoke test
+              command: |
+                URL="https://blog.udacity.com/"
+                # Test if website exists
+                if curl -s --head ${URL} 
+                then
+                  return 0
+                else
+                  return 1
+                  fi
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   create_configure-infra-workflow:
     jobs:
       # - create_infrastructure
-      - configure_infrastructure
+      # - configure_infrastructure
+        - smoke_test
             #  requires:
             #      - create_infrastructure
       
