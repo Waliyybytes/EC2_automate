@@ -74,7 +74,7 @@ jobs:
           name: simulate error
           # Fail the job intentionally to simulate an error.
           command:  return 1
-      - destroy_environment:
+      - destroy_environment
         when: on_fail
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
