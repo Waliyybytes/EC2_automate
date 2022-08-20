@@ -71,10 +71,11 @@ jobs:
       - image: alpine:latest
     steps:
       - run:
-          name: Test job
+          name: simulate error
           # Fail the job intentionally to simulate an error.
           command:  return 1
       - destroy_environment
+        when: on fail
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -84,6 +85,6 @@ workflows:
       # - configure_infrastructure
         - create_infrastructure
         - smoke_test
-            #  requires:
-            #      - create_infrastructure
+            requires:
+                  - create_infrastructure
       
