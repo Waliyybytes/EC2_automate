@@ -7,42 +7,42 @@ orbs:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  create_infrastructure:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker: 
-      - image: amazon/aws-cli
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: aws cloudformation deploy --template-file template.yml --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} --region us-east-1
+  # create_infrastructure:
+  #   # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+  #   # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  #   docker: 
+  #     - image: amazon/aws-cli
+  #   # Add steps to the job
+  #   # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Create Cloudformation Stack
+  #         command: aws cloudformation deploy --template-file template.yml --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} --region us-east-1
 
-#   configure_infrastructure:    
-#     docker:
-#       - image: python:3.7alpine3.11
-#     steps:
-#       - checkout
-#       - add_ssh_keys:
-#           fingerprints: [53:ac:a9:3c:94:d9:54:5e:a4:13:9c:05:d6:6b:75:5e]
-#       - run: 
-#           name: install dependencies
-#           command: |
-#             apk add --update ansible
-#       - run: 
-#           name: configure server
-#           command: |
-#             ansible-playbook -i inventory.txt template.yml
+    configure_infrastructure:    
+      docker:
+        - image: python:3.7alpine3.11
+      steps:
+        - checkout
+        - add_ssh_keys:
+            fingerprints: [53:ac:a9:3c:94:d9:54:5e:a4:13:9c:05:d6:6b:75:5e]
+        - run: 
+            name: install dependencies
+            command: |
+              apk add --update ansible
+        - run: 
+            name: configure server
+            command: |
+              ansible-playbook -i inventory.txt template.yml
 
-# # Invoke jobs via workflows
-# # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  create-infra-workflow:
+  create_configure-infra-workflow:
     jobs:
-      - create_infrastructure
-      # - configure_infrastructure:
-      #        requires:
-      #            - create_infrastructure
+      # - create_infrastructure
+      - configure_infrastructure:
+            #  requires:
+            #      - create_infrastructure
       
