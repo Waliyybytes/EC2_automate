@@ -7,7 +7,7 @@ orbs:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 commands:
-  image: amazon/aws-cli
+  docker: amazon/aws-cli
    # Exercise - Rollback
   destroy_environment:
     steps:
@@ -75,7 +75,7 @@ jobs:
           name: simulate error
           # Fail the job intentionally to simulate an error.
           command:  return 1
-      - destroy_environment
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
