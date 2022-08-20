@@ -9,6 +9,8 @@ orbs:
 commands:
    # Exercise - Rollback
   destroy_environment:
+    docker: 
+      - image: amazon/aws-cli
     steps:
      - run:
         name: Destroy environment
@@ -83,6 +85,8 @@ workflows:
       # - create_infrastructure
       # - configure_infrastructure
         - create_infrastructure
-        - smoke_test
+        - smoke_test:
+              requires:
+                - create_infrastructure
             
       
